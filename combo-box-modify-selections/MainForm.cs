@@ -6,12 +6,15 @@ namespace combo_box_modify_selections
 {
     public partial class MainForm : Form
     {
-        public MainForm()
+        public MainForm() => InitializeComponent();
+        protected override void OnLoad(EventArgs e)
         {
-            InitializeComponent();
+            base.OnLoad(e);
+            comboBoxCom.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxCom.DataSource = MockDataSource;
             refreshAvailableComPorts(init: true);
             comboBoxCom.DropDown += onComboBoxComDropDown;
+            comboBoxCom.DropDownClosed += (sender, e) => ActiveControl = null;
         }
 
         BindingList<string> MockDataSource = new BindingList<string>();
@@ -26,8 +29,7 @@ namespace combo_box_modify_selections
             {
                 MockDataSource.Clear();
                 MockDataSource.Add("COM2");
-                comboBoxCom.DropDownStyle= ComboBoxStyle.DropDownList;
-                comboBoxCom.SelectedIndex = 0;
+                BeginInvoke(() => ActiveControl = null);
             }
             else
             {
